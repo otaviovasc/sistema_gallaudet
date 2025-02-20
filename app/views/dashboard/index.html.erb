@@ -1,2 +1,49 @@
-<h1>Dashboard#index</h1>
-<p>Find me in app/views/dashboard/index.html.erb</p>
+<div class="min-h-screen flex bg-gray-900 text-white">
+  <!-- COLUMN 1: School Select + Buttons -->
+  <div class="w-1/4 bg-gray-800 p-4 border-r border-gray-700">
+    <% if current_user.role == "manager_general" %>
+      <%= form_with url: dashboard_select_school_path, method: :patch, local: true do |form| %>
+        <div class="mb-4">
+          <label for="school_id" class="block text-sm font-medium mb-1">
+            Selecione a Escola
+          </label>
+          <%= form.select :school_id,
+            options_from_collection_for_select(
+              @schools, :id, :name, session[:selected_school_id]
+            ),
+            { prompt: "Escolha uma escola" },
+            class: "w-full p-2 bg-gray-700 border border-gray-600 rounded"
+          %>
+        </div>
+        <%= form.submit "Selecionar", class: "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+      <% end %>
+    <% else %>
+      <!-- Manager_unit read-only field -->
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">Escola</label>
+        <div class="w-full p-2 bg-gray-700 border border-gray-600 rounded cursor-not-allowed">
+          <%= current_user.school&.name || "Nenhuma Escola" %>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="flex flex-col space-y-2">
+      <%= link_to "Listar Alunos", dashboard_list_students_path,
+          class: "w-full bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded" %>
+      <%= link_to "Listar Profissionais", dashboard_list_professionals_path,
+          class: "w-full bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded" %>
+    </div>
+  </div>
+
+  <!-- COLUMN 2: Placeholder for search/listing -->
+  <div class="w-1/2 bg-gray-900 p-4 border-r border-gray-700">
+    <h2 class="text-lg font-bold mb-4">Coluna 2 - Conteúdo Futuro</h2>
+    <!-- Next tasks: search form, filters, listing of selected resource -->
+  </div>
+
+  <!-- COLUMN 3: Placeholder for analytics -->
+  <div class="w-1/4 bg-gray-800 p-4">
+    <h2 class="text-lg font-bold mb-4">Coluna 3 - Analytics</h2>
+    <!-- Next tasks: analytics display, expand modal, etc. -->
+  </div>
+</div>

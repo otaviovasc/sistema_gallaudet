@@ -1,0 +1,47 @@
+<!-- app/views/shared/_navbar.html.erb -->
+<nav class="bg-gray-800 text-white">
+  <div class="max-w-7xl mx-auto px-4">
+    <div class="flex justify-between items-center h-14">
+      <!-- Left: Title or Brand -->
+      <div class="flex-shrink-0">
+        <h1 class="text-xl font-bold">Sistema Gallaudet</h1>
+      </div>
+
+      <!-- Right: Avatar + Dropdown -->
+      <div class="relative" data-controller="dropdown">
+        <!-- Avatar Button -->
+        <button
+          type="button"
+          class="flex items-center focus:outline-none"
+          data-action="click->dropdown#toggle"
+        >
+          <!-- You could replace this with a user-specific avatar if available -->
+          <img
+            src="https://via.placeholder.com/40x40.png?text=Avatar"
+            alt="Avatar"
+            class="h-8 w-8 rounded-full border-2 border-white"
+          />
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div
+          class="absolute right-0 mt-2 w-40 bg-white text-gray-800 rounded shadow-lg py-2 hidden"
+          data-dropdown-target="menu"
+        >
+          <!-- Profile (placeholder) -->
+          <a
+            href="#"
+            class="block px-4 py-2 hover:bg-gray-100"
+          >
+            Profile
+          </a>
+          <!-- Sign Out -->
+          <%= link_to "Sign Out", destroy_user_session_path,
+              method: :delete,
+              data: { turbo_method: :delete },
+              class: "block px-4 py-2 hover:bg-gray-100" %>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>

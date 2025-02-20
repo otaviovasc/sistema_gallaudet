@@ -96,3 +96,22 @@ enrollments.each do |enrollment|
 end
 
 puts "Seeds finalizados com sucesso!"
+
+
+gg = User.create!(
+  email: "geral@gmail.com",
+  password: '123123',
+  role: 'manager_general'
+)
+
+gu = User.create!(
+  email: "unit@gmail.com",
+  password: '123123',
+  role: 'manager_unit',
+  school: School.first
+)
+
+puts "Criado contas de teste:"
+puts "Gerente Geral: #{gg.email}, Role: #{gg.role}"
+puts "Gerente de Unidade: #{gu.email}, Role: #{gu.role}, Escola: #{gu.school.name}"
+puts "Seeds finalizados com sucesso!"
