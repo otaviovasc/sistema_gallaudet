@@ -18,7 +18,8 @@ Rails.application.routes.draw do
   resources :courses do
     resources :enrollments, only: [:create, :destroy]
   end
-  
+
   resources :attendances
   root "dashboard#index"
+  get "dashboard", to: "dashboard#index"
 end
