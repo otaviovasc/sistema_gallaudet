@@ -1,0 +1,90 @@
+<turbo-frame id="listing">
+  <div class="mb-4">
+    <%= form_with url: request.fullpath, method: :get, local: false, data: { turbo_frame: "listing" } do |f| %>
+      <div class="flex items-center space-x-2">
+        <!-- Filter Icon with Dropdown -->
+        <div class="relative" data-controller="dropdown">
+          <button type="button" class="p-2 rounded bg-gray-700 hover:bg-gray-600" data-action="click->dropdown#toggle">
+            <!-- Filter Icon (SVG) -->
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707l-5.414 5.414A1 1 0 0015 13v5a1 1 0 01-1 1h-2a1 1 0 01-1-1v-5a1 1 0 00-.293-.707L3.293 6.707A1 1 0 013 6V4z" />
+            </svg>
+          </button>
+          <!-- Dropdown Menu for Filter Options -->
+          <div class="absolute left-0 mt-2 w-64 bg-white text-gray-800 rounded shadow-lg py-2 hidden" data-dropdown-target="menu">
+            <!-- Sort By Attendances -->
+            <div class="px-4 py-2">
+              <label for="sort" class="block text-sm font-medium">Ordenar por:</label>
+              <%= f.select :sort,
+                  options_for_select([["Nenhum", ""], ["Atendimentos (desc)", "attendances_desc"], ["Atendimentos (asc)", "attendances_asc"]], params[:sort]),
+                  { prompt: false },
+                  { class: "w-full p-2 border border-gray-300 rounded", onchange: "this.form.requestSubmit()" } %>
+            </div>
+            <!-- Filter by Course -->
+            <div class="px-4 py-2">
+              <label for="course" class="block text-sm font-medium">Filtrar por Curso:</label>
+              <%= f.select :course,
+                  options_for_select(
+                    [["Todos", ""]] +
+                    Course.where(school_id: (session[:selected_school_id] || current_user.school&.id))
+                          .pluck(:name, :id),
+                    params[:course]
+                  ),
+                  { prompt: false },
+                  { class: "w-full p-2 border border-gray-300 rounded", onchange: "this.form.requestSubmit()" } %>
+            </div>
+          </div>
+          <!-- End Dropdown -->
+        </div>
+        <!-- Search Input Field -->
+        <div class="flex-1">
+          <%= f.text_field :query, value: params[:query], placeholder: "Buscar por nome...", class: "w-full p-2 bg-gray-700 border border-gray-600 rounded" %>
+        </div>
+        <!-- Search Button -->
+        <div>
+          <%= f.submit "Pesquisar", class: "bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <hr class="my-4 border-gray-600" />
+
+  <% if local_assigns[:students] %>
+    <h2 class="text-lg font-bold mb-2">Lista de Alunos</h2>
+    <table class="min-w-full divide-y divide-gray-600">
+      <thead>
+        <tr>
+          <th class="px-4 py-2 text-left text-sm font-medium">Nome</th>
+          <th class="px-4 py-2 text-left text-sm font-medium">Data de Nascimento</th>
+          <th class="px-4 py-2 text-left text-sm font-medium">Curso(s)</th>
+          <th class="px-4 py-2 text-left text-sm font-medium">Atendimentos</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-600">
+        <% students.each do |student| %>
+          <tr>
+            <td class="px-4 py-2"><%= student.name %></td>
+            <td class="px-4 py-2">
+              <%= student.birth_date.present? ? student.birth_date.strftime("%d/%m/%Y") : "-" %>
+            </td>
+            <td class="px-4 py-2">
+              <% courses = student.courses %>
+              <%= courses.any? ? courses.map(&:name).join(", ") : "Nenhum curso" %>
+            </td>
+            <td class="px-4 py-2"><%= student.attendances.count %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% elsif local_assigns[:professionals] %>
+    <h2 class="text-lg font-bold mb-2">Lista de Profissionais</h2>
+    <ul>
+      <% professionals.each do |professional| %>
+        <li class="py-2 border-b border-gray-600"><%= professional.name %></li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>Nenhum registro encontrado.</p>
+  <% end %>
+</turbo-frame>
