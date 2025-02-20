@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get "dashboard/index"
   devise_for :users
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -11,5 +12,13 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  # root "posts#index"
+  resources :schools
+  resources :students
+  resources :professionals
+  resources :courses do
+    resources :enrollments, only: [:create, :destroy]
+  end
+  
+  resources :attendances
+  root "dashboard#index"
 end
