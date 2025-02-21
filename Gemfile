@@ -29,6 +29,8 @@ gem "devise"
 # Use Faker for generating fake data
 gem "faker"
 
+gem "chartkick"
+
 # Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
 gem "solid_cache"
 gem "solid_queue"

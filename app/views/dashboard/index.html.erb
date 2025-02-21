@@ -42,8 +42,18 @@
   </div>
 
   <!-- COLUMN 3: (Placeholder for analytics) -->
-  <div class="w-1/4 bg-gray-800 p-4">
-    <h2 class="text-lg font-bold mb-4">Coluna 3 - Analytics</h2>
-    <!-- Analytics content to be implemented in a future task -->
+  <div class="p-4">
+    <h2 class="text-lg font-bold mb-4">Analytics</h2>
+    <div class="bg-white p-4 rounded shadow">
+      <!-- Sample Line Chart using Chartkick -->
+      <% obj_test = [["Janeiro", 10], ["Fevereiro", 15], ["Março", 20], ["Abril", 25]]%>
+      <%= line_chart(
+        obj_test,
+        height: "300px", colors: ["#4299e1"]) %>
+    </div>
+    <!-- Expand button that opens a modal (to be implemented with Stimulus or similar) -->
+    <button id="expandAnalytics" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+      Expandir
+    </button>
   </div>
 </div>
