@@ -15,7 +15,7 @@
             class: "w-full p-2 bg-gray-700 border border-gray-600 rounded"
           %>
         </div>
-        <%= form.submit "Selecionar", class: "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" %>
+        <%= form.submit "Selecionar Instituição de Ensino", class: "w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 mb-4 rounded" %>
       <% end %>
     <% else %>
       <div class="mb-4">
@@ -26,7 +26,7 @@
       </div>
     <% end %>
 
-    <div class="flex flex-col space-y-2">
+    <div class="flex flex-col space-y-2 my-4">
       <%= link_to "Listar Alunos", dashboard_list_students_path,
           class: "w-full bg-gray-700 hover:bg-gray-600 text-white font-semibold py-2 px-4 rounded", data: { turbo_frame: "listing" } %>
       <%= link_to "Listar Profissionais", dashboard_list_professionals_path,

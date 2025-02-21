@@ -18,28 +18,37 @@ class DashboardController < ApplicationController
 
   def list_students
     @query = params[:query]
-    @students = Student.all
+
+    school_id = if current_user.role == "manager_general"
+                  session[:selected_school_id]
+                else
+                  current_user.school_id
+                end
+
+    # Join courses to limit to the school's students,
+    # left join attendances and select the count as an alias.
+    @students = Student
+                  .joins(:courses)
+                  .where(courses: { school_id: school_id })
+                  .left_joins(:attendances)
+                  .select("students.*, COUNT(attendances.id) AS attendances_count")
+                  .group("students.id")
 
     # Apply search filter by name if provided.
-    @students = @students.where("name ILIKE ?", "%#{@query}%") if @query.present?
+    @students = @students.where("students.name ILIKE ?", "%#{@query}%") if @query.present?
 
     # Apply course filter if provided.
     if params[:course].present? && params[:course] != ""
-      # Join courses through enrollments (assuming association exists)
-      @students = @students.joins(:courses).where(courses: { id: params[:course] }).distinct
+      @students = @students.where(courses: { id: params[:course] })
     end
 
-    # Apply sorting based on attendances if provided.
+    # Apply sorting based on attendances using the alias.
     if params[:sort].present?
       case params[:sort]
       when "attendances_desc"
-        @students = @students.left_joins(:attendances)
-                             .group("students.id")
-                             .order("COUNT(attendances.id) DESC")
+        @students = @students.order("attendances_count DESC")
       when "attendances_asc"
-        @students = @students.left_joins(:attendances)
-                             .group("students.id")
-                             .order("COUNT(attendances.id) ASC")
+        @students = @students.order("attendances_count ASC")
       end
     end
 
